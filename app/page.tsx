@@ -3,9 +3,9 @@ import StatsBar from "./Components/StatsBar";
 import "./globals.css";
 import Navbar from "./Components/Navbar";
 import TripCard from "./Components/TripCard";
+import Footer from "./Components/Footer";
 
 export default function Home() {
-  // 1. Define the data inside the Home component, BEFORE the return statement
   const tripsData = [
     {
       id: 1,
@@ -13,7 +13,7 @@ export default function Home() {
       price: "2000",
       difficulty: "Hard",
       difficultyColor: "bg-red-600",
-      imageUrl: "/images/tkijda.svg" 
+      imageUrl: "/images/tikjda.svg",
     },
     {
       id: 2,
@@ -21,15 +21,15 @@ export default function Home() {
       price: "2000",
       difficulty: "Medium",
       difficultyColor: "bg-yellow-500",
-      imageUrl: "/images/lakhdria.svg"
+      imageUrl: "/images/lakhdaria.svg",
     },
     {
       id: 3,
       title: "Djurdjura",
-      price: "2800",
+      price: "2000",
       difficulty: "Medium",
       difficultyColor: "bg-yellow-500",
-      imageUrl: "/images/Djurdjura.svg" 
+      imageUrl: "/images/djurdjura.svg",
     },
     {
       id: 4,
@@ -37,42 +37,47 @@ export default function Home() {
       price: "2000",
       difficulty: "Easy",
       difficultyColor: "bg-green-600",
-      imageUrl: "/images/lake dhaya.svg"
+      imageUrl: "/images/lake_dhaya.svg",
     }
   ];
 
-  // 2. The single return statement that renders the entire page
   return (
-    <main className="min-h-screen bg-gray-100 pb-20">
-      {/* Existing Top Components */}
+    <main className="min-h-screen bg-[#F3F4F6]">
       <Navbar />
       <Hero />
       <StatsBar />
 
-      {/* New Trips Section */}
-      <section className="py-12 bg-gray-100 max-w-6xl mx-auto px-4 mt-10">
-        <div className="flex justify-between items-end mb-8">
-          <div>
-            <h4 className="text-gray-400 text-sm uppercase tracking-widest">Best Trips</h4>
-            <h2 className="font-serif text-4xl text-[#1e293b] mt-2">Algerian Trips</h2>
-          </div>
-          <p className="text-gray-400 italic">Escape the Ordinary</p>
-        </div>
 
-        {/* The Responsive Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {tripsData.map((trip) => (
-            <TripCard
-              key={trip.id}
-              title={trip.title}
-              price={trip.price}
-              difficulty={trip.difficulty}
-              imageUrl={trip.imageUrl}
-              difficultyColor={trip.difficultyColor}
-            />
-          ))}
+      {/* Trips Section */}
+      <section className="mt-20 px-6">
+        <div className="max-w-6xl mx-auto">
+
+          {/* Header */}
+          <div className="flex justify-between items-end mb-14">
+            <div>
+              <p className="text-gray-400 text-sm tracking-widest mb-2">
+                Best Trips
+              </p>
+              <h2 className="font-serif text-4xl font-bold text-gray-900">
+                Algerian Trips
+              </h2>
+            </div>
+
+            <p className="hidden md:block text-gray-400 italic font-serif text-lg">
+              Escape the Ordinary
+            </p>
+          </div>
+
+          {/* PERFECT 2x2 GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {tripsData.map((trip) => (
+              <TripCard key={trip.id} {...trip} />
+            ))}
+          </div>
+
         </div>
       </section>
+      <Footer />
     </main>
   );
 }
