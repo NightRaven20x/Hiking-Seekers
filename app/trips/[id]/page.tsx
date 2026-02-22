@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { tripsData } from "../../data/trips";
 
+
 export default async function TripDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   
@@ -149,7 +150,8 @@ export default async function TripDetails({ params }: { params: Promise<{ id: st
         </div>
 
       </section>
-
+      
+      
       <Footer />
     </main>
   );

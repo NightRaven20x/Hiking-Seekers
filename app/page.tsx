@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "./Components/Navbar";
 import TripCard from "./Components/TripCard";
 import Footer from "./Components/Footer";
+import Gallery from "./Components/Gallery";
 
 export default function Home() {
   const tripsData = [
@@ -77,6 +78,8 @@ export default function Home() {
 
         </div>
       </section>
+
+      <Gallery />
       <Footer />
     </main>
   );
