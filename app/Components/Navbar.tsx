@@ -12,10 +12,10 @@ export default function Navbar() {
   // Function to check if a link is exactly active
   const isActive = (path: string) => pathname === path;
   
-  // NEW: Check if we are currently on the homepage
+  // Check if we are currently on the homepage
   const isHomePage = pathname === "/";
 
-  // NEW: Apply the dark text / solid background if we scrolled OR if we aren't on the homepage
+  // Determine if we should apply the solid background style
   const applySolidStyle = isScrolled || !isHomePage;
 
   // Listen for scroll to trigger the solid background
@@ -33,14 +33,21 @@ export default function Navbar() {
   }, []);
 
   return (
-    // Outer Nav Tag uses applySolidStyle instead of isScrolled
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${applySolidStyle ? "py-3 bg-white/95 backdrop-blur-md shadow-sm" : "py-6 bg-transparent"}`}>
+    // Outer Nav Tag: Fixed at top, centered content, padding at the top so it floats
+    <nav className="fixed top-0 w-full z-50 pt-6 px-4 flex justify-center transition-all duration-300">
       
-      <div className="w-full px-6 md:px-12 lg:px-20 flex items-center justify-between">
+      {/* THE PILL CONTAINER: Holds everything and has the glass/solid background */}
+      <div 
+        className={`w-full max-w-7xl flex items-center justify-between px-6 py-3 rounded-full transition-all duration-300 shadow-lg ${
+          applySolidStyle 
+            ? "bg-white/95 backdrop-blur-md shadow-gray-200/50" 
+            : "bg-white/10 backdrop-blur-md border border-white/20"
+        }`}
+      >
 
         {/* 1. LEFT: Logo Section */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-10 h-10">
+          <div className="relative w-9 h-9">
             <Image
               src="/images/Logo.svg"
               alt="Hiking Seekers Logo"
@@ -49,57 +56,59 @@ export default function Navbar() {
               priority
             />
           </div>
-          <span className={`font-serif font-bold tracking-wide text-xl transition-colors duration-300 ${applySolidStyle ? "text-gray-900" : "text-white drop-shadow-md"}`}>
+          <span className={`font-serif font-bold tracking-wide text-xl transition-colors duration-300 ${
+            applySolidStyle ? "text-gray-900" : "text-white drop-shadow-sm"
+          }`}>
             Hiking Seekers
           </span>
         </Link>
 
-        {/* 2. CENTER: Floating Pill Links Container */}
-        <div className="hidden md:flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
-            
-            <div className={`flex items-center gap-8 px-8 py-2.5 rounded-full transition-all duration-300 ${applySolidStyle ? "bg-gray-100" : "bg-white/10 backdrop-blur-md border border-white/20"}`}>
-              
-              <Link
-                href="/"
-                className={`text-sm transition-all duration-300 ${isActive("/") 
-                  ? (applySolidStyle ? "text-gray-900 font-bold" : "text-white font-bold") 
-                  : (applySolidStyle ? "text-gray-500 hover:text-gray-900" : "text-gray-300 hover:text-white")}`}
-              >
-                Home
-              </Link>
+        {/* 2. CENTER: Links Container  */}
+        <div className="hidden md:flex items-center gap-8">
+          <Link
+            href="/"
+            className={`text-sm transition-all duration-300 ${isActive("/") 
+              ? (applySolidStyle ? "text-gray-900 font-bold" : "text-white font-bold") 
+              : (applySolidStyle ? "text-gray-500 hover:text-gray-900" : "text-gray-200 hover:text-white")}`}
+          >
+            Home
+          </Link>
 
-              {/* Notice the pathname.startsWith check so "Trips" stays active on trip detail pages! */}
-              <Link
-                href="/trips"
-                className={`text-sm transition-all duration-300 ${isActive("/trips") || pathname.startsWith("/trips")
-                  ? (applySolidStyle ? "text-gray-900 font-bold" : "text-white font-bold") 
-                  : (applySolidStyle ? "text-gray-500 hover:text-gray-900" : "text-gray-300 hover:text-white")}`}
-              >
-                Trips
-              </Link>
+          <Link
+            href="/trips"
+            className={`text-sm transition-all duration-300 ${isActive("/trips") || pathname.startsWith("/trips")
+              ? (applySolidStyle ? "text-gray-900 font-bold" : "text-white font-bold") 
+              : (applySolidStyle ? "text-gray-500 hover:text-gray-900" : "text-gray-200 hover:text-white")}`}
+          >
+            Trips
+          </Link>
 
-              <Link
-                href="/about"
-                className={`text-sm transition-all duration-300 ${isActive("/about") 
-                  ? (applySolidStyle ? "text-gray-900 font-bold" : "text-white font-bold") 
-                  : (applySolidStyle ? "text-gray-500 hover:text-gray-900" : "text-gray-300 hover:text-white")}`}
-              >
-                About
-              </Link>
+          <Link
+            href="/about"
+            className={`text-sm transition-all duration-300 ${isActive("/about") 
+              ? (applySolidStyle ? "text-gray-900 font-bold" : "text-white font-bold") 
+              : (applySolidStyle ? "text-gray-500 hover:text-gray-900" : "text-gray-200 hover:text-white")}`}
+          >
+            About
+          </Link>
 
-              <Link
-                href="/contact"
-                className={`text-sm transition-all duration-300 ${isActive("/contact") 
-                  ? (applySolidStyle ? "text-gray-900 font-bold" : "text-white font-bold") 
-                  : (applySolidStyle ? "text-gray-500 hover:text-gray-900" : "text-gray-300 hover:text-white")}`}
-              >
-                Contact
-              </Link>
-            </div>
+          <Link
+            href="/contact"
+            className={`text-sm transition-all duration-300 ${isActive("/contact") 
+              ? (applySolidStyle ? "text-gray-900 font-bold" : "text-white font-bold") 
+              : (applySolidStyle ? "text-gray-500 hover:text-gray-900" : "text-gray-200 hover:text-white")}`}
+          >
+            Contact
+          </Link>
         </div>
 
         {/* 3. RIGHT: CTA Button */}
-        <button className={`px-6 py-2.5 rounded-full text-sm font-semibold transition transform hover:scale-95 ${applySolidStyle ? "bg-gray-900 text-white hover:bg-gray-800" : "bg-white text-gray-900 hover:bg-gray-100"}`}>
+        {/* Note: I kept your color transition logic so it matches the background state */}
+        <button className={`px-6 py-2.5 rounded-full text-sm font-semibold transition transform hover:scale-95 ${
+          applySolidStyle 
+            ? "bg-gray-900 text-white hover:bg-gray-800" 
+            : "bg-white text-gray-900 hover:bg-gray-100 shadow-md"
+        }`}>
           Book Now
         </button>
 

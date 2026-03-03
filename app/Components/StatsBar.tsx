@@ -9,7 +9,7 @@ export default function StatsBar() {
   return (
     <section className="relative z-20 px-4 max-w-6xl mx-auto">
       {/* The negative margin pulls this UP to overlap the hero image */}
-      <div className="-mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="-mt-13 grid grid-cols-2 md:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
           <div 
             key={index}

@@ -1,14 +1,15 @@
 import React from "react";
 
-// For now, we will use your existing trip images as placeholders.
-// You can easily swap these out later with real .jpg or .png photos from your trips!
+// trip images as placeholders.
 const galleryImages = [
-  "/images/tikjda.svg",
-  "/images/lakhdaria.svg",
-  "/images/djurdjura.svg",
-  "/images/lake_dhaya.svg",
-  "/images/tikjda.svg", 
-  "/images/lakhdaria.svg",
+  "/Gallery/1.jpg",
+  "/Gallery/2.jpg",
+  "/Gallery/3.jpg",
+  "/Gallery/4.jpg",
+  "/Gallery/5.jpg", 
+  "/Gallery/6.jpg",
+  "/Gallery/7.jpg",
+  "/Gallery/8.jpg",
 ];
 
 export default function Gallery() {
