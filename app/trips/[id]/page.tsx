@@ -15,7 +15,7 @@ export default async function TripDetails({ params }: { params: Promise<{ id: st
   if (!trip) notFound();
 
   return (
-    <main className="min-h-screen bg-[#F0EDE8]">
+    <main className="min-h-screen bg-white">
       <Navbar />
       
       {/* Pass trip data to client component */}
