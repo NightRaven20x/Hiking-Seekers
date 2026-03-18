@@ -1,22 +1,31 @@
-/* 1. Import your Font (Source Serif 4) */
+@import url('https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;600;700&family=Inter:wght@400;500;600&display=swap');
+
 @import "tailwindcss";
 
-
+/* Tailwind v4 Theme Tokens */
 @theme {
-  /* 2. Define your Custom Colors */
-  --color-primary: #F97316;       /* The Hiking Seekers Orange */
-  --color-primary-hover: #ea580c; /* Darker orange for hover */
-  
-  /* 3. Define your Custom Fonts */
+  /* Colors */
+  --color-primary: #F97316;
+  --color-primary-hover: #ea580c;
+
+  /* Fonts */
+  --font-playfair: "Playfair", serif;
   --font-serif: "Source Serif 4", serif;
   --font-sans: "Inter", sans-serif;
 }
 
+/* Utility font classes (used in Tailwind component classes) */
+.font-playfair {
+  font-family: var(--font-playfair);
+}
 
+.font-montserrat {
+  font-family: var(--font-montserrat);
+}
 
-/* Reset body to simple defaults */
+/* Base styles */
 body {
   font-family: var(--font-sans);
-  background-color: #f3f4f6; /* Light grey background */
+  background-color: #f3f4f6;
 }

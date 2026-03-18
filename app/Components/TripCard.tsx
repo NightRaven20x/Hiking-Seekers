@@ -10,12 +10,10 @@ interface TripCardProps {
   difficultyColor: string;
 }
 
-// 1. Added 'id' right here so the component can use it
 const TripCard: React.FC<TripCardProps> = ({ id, title, price, difficulty, imageUrl, difficultyColor }) => {
   return (
-    // 2. Wrapped the entire card in the Link pointing to the dynamic route
     <Link href={`/trips/${id}`} className="block group">
-      <div className="bg-trip-card rounded-[20px] overflow-hidden shadow-sm flex flex-col cursor-pointer transition-transform hover:-translate-y-1 duration-300">
+      <div className="bg-white rounded-[20px] overflow-hidden shadow-sm flex flex-col cursor-pointer transition-transform hover:-translate-y-1 duration-300 border border-gray-100">
         
         <div className="relative h-[260px] w-full overflow-hidden">
           <img
@@ -34,11 +32,10 @@ const TripCard: React.FC<TripCardProps> = ({ id, title, price, difficulty, image
           </div>
         </div>
 
-        <div className="p-4 px-5 flex justify-between items-center bg-trip-card border-t border-trip-card-border">
-          <h3 className="font-serif text-xl font-bold text-foreground">{title}</h3>
+        <div className="p-4 px-5 flex justify-between items-center bg-white border-t border-gray-100">
+          <h3 className="font-serif text-xl font-bold text-gray-900">{title}</h3>
           
-          {/* Kept your custom trip-orange classes here! */}
-          <div className="w-8 h-8 bg-trip-arrow-bg rounded flex items-center justify-center text-muted-foreground group-hover:bg-trip-orange group-hover:text-trip-orange-foreground transition-colors">
+          <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center text-gray-500 group-hover:bg-[#FF7B29] group-hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
             </svg>
