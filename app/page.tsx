@@ -21,26 +21,26 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
 
           {/* Header */}
-          <div className="text-center mb-4">
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 uppercase tracking-wide">
+          <div className="text-center mb-4 ">
+            <h2 className="font-playfair font-medium text-[4rem] md:text-[5rem] text-[#000000] uppercase tracking-wide">
               Our Hiking{" "}
-              <span className="text-[#4A7C59]">Packages</span>
+              <span className="text-[#1B4332] font-bold">Packages</span>
             </h2>
           </div>
 
           {/* Difficulty Legend */}
-          <div className="flex items-center justify-center gap-3 mb-14">
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 bg-white border border-gray-200 rounded-full px-3 py-1.5 shadow-sm">
+          <div className="flex items-center justify-center gap-3 mb-14 border border-gray-300 rounded-full py-2 px-4 w-max mx-auto">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 ">
               <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
               EASY
             </span>
             <span className="text-gray-300 text-sm">|</span>
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 bg-white border border-gray-200 rounded-full px-3 py-1.5 shadow-sm">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-gray-600">
               <span className="w-2 h-2 rounded-full bg-yellow-400 inline-block" />
               MEDIUM
             </span>
             <span className="text-gray-300 text-sm">|</span>
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 bg-white border border-gray-200 rounded-full px-3 py-1.5 shadow-sm">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 ">
               <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />
               HARD
             </span>

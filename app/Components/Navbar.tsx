@@ -61,10 +61,10 @@ export default function Navbar() {
         </Link>
 
         {/* 2. CENTER: Links Container  */}
-        <div className="hidden md:flex items-center font-Montserrat font-medium gap-8">
+        <div className="hidden md:flex items-center font-Montserrat font-medium gap-18 ">
           <Link
             href="/"
-            className={`text-sm font-medium transition-all duration-300 ${isActive("/") 
+            className={`text-m font-medium transition-all duration-300 ${isActive("/") 
               ? (isScrolled ? "text-gray-900 font-bold" : "text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]") 
               : (isScrolled ? "text-gray-500 hover:text-gray-900" : "text-white/90 hover:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.2)]")}`}
           >
@@ -73,7 +73,7 @@ export default function Navbar() {
 
           <Link
             href="/trips"
-            className={`text-sm font-medium transition-all duration-300 ${isActive("/trips") || pathname.startsWith("/trips")
+            className={`text-m font-medium transition-all duration-300 ${isActive("/trips") || pathname.startsWith("/trips")
               ? (isScrolled ? "text-gray-900 font-bold" : "text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]") 
               : (isScrolled ? "text-gray-500 hover:text-gray-900" : "text-white/90 hover:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.2)]")}`}
           >
@@ -82,7 +82,7 @@ export default function Navbar() {
 
           <Link
             href="/about"
-            className={`text-sm font-medium transition-all duration-300 ${isActive("/about") 
+            className={`text-m font-medium transition-all duration-300 ${isActive("/about") 
               ? (isScrolled ? "text-gray-900 font-bold" : "text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]") 
               : (isScrolled ? "text-gray-500 hover:text-gray-900" : "text-white/90 hover:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.2)]")}`}
           >
@@ -91,7 +91,7 @@ export default function Navbar() {
 
           <Link
             href="/contact"
-            className={`text-sm font-medium transition-all duration-300 ${isActive("/contact") 
+            className={`text-m font-medium transition-all duration-300 ${isActive("/contact") 
               ? (isScrolled ? "text-gray-900 font-bold" : "text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]") 
               : (isScrolled ? "text-gray-500 hover:text-gray-900" : "text-white/90 hover:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.2)]")}`}
           >
@@ -100,7 +100,7 @@ export default function Navbar() {
         </div>
 
         {/* 3. RIGHT: CTA Button */}
-        <button className={`px-6 py-2.5 rounded-full text-sm font-Montserrat font-semibold transition-all duration-300 hover:scale-105 ${
+        <button className={`px-8 py-2.5 rounded-full text-m font-Montserrat font-semibold transition-all duration-300 hover:scale-105 ${
           isScrolled 
             ? "bg-gray-900 text-white hover:bg-gray-800 shadow-md" 
             : "bg-[#1B4332] text-white hover:bg-[#153526] shadow-[0_4px_16px_rgba(0,0,0,0.2)] backdrop-blur-sm"

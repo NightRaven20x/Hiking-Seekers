@@ -13,7 +13,7 @@ export default function StatsBar() {
         {stats.map((stat, index) => (
           <div 
             key={index}
-            className="bg-white rounded-xl shadow-lg py-6 px-4 text-center transform transition hover:-translate-y-1 duration-300"
+            className="bg-white rounded-[2rem] shadow-lg py-6 px-4 text-center transform transition hover:-translate-y-1 duration-300"
           >
             <h3 className="text-3xl font-bold text-gray-900 font-serif">
               {stat.value}

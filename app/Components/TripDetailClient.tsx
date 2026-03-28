@@ -26,7 +26,7 @@ export default function TripDetailClient({ trip }: { trip: Trip }) {
   return (
     <>
       {/* Hero Banner */}
-      <div className="relative w-full h-[45vh] min-h-100 overflow-hidden rounded-b-[40px]">
+      <div className="relative w-full h-[45vh] min-h-100 overflow-hidden rounded-b-[70px]">
         <Image
           src={trip.imageUrl}
           alt={trip.title}
@@ -38,7 +38,7 @@ export default function TripDetailClient({ trip }: { trip: Trip }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
         {/* Title sits bottom-left */}
-        <div className="absolute bottom-0 left-0 right-0 max-w-6xl mx-15 px-8 pb-10">
+        <div className="absolute bottom-0 left-0 right-0 max-w-6xl mx-25 px-8 pb-25">
           <h1 className="text-5xl md:text-7xl font-playfair font-bold text-white drop-shadow-lg uppercase tracking-tight">
             {trip.title.toUpperCase()}
           </h1>
