@@ -26,10 +26,15 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
-// 2. Updated your site title and description!
+// 2. Updated your site title, description, and browser icon.
 export const metadata: Metadata = {
   title: "Hiking Seekers",
   description: "Where Adventure Meets Heritage",
+  icons: {
+    icon: "/images/Logo.svg",
+    shortcut: "/images/Logo.svg",
+    apple: "/images/Logo.svg",
+  },
 };
 
 export default function RootLayout({
