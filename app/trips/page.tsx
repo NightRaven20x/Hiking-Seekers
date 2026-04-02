@@ -11,8 +11,8 @@ export default function TripsPage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("All");
 
   // Filter trips based on selected difficulty
-  const filteredTrips = selectedDifficulty === "All" 
-    ? tripsData 
+  const filteredTrips = selectedDifficulty === "All"
+    ? tripsData
     : tripsData.filter(trip => trip.difficulty === selectedDifficulty);
 
   return (
@@ -30,7 +30,7 @@ export default function TripsPage() {
             priority
           />
         </div>
-        
+
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-0" />
 
@@ -46,7 +46,7 @@ export default function TripsPage() {
 
       {/* Filter Section */}
       <section className="max-w-6xl mx-auto px-6 py-12">
-        
+
         {/* Filter Heading */}
         <div className="text-center mb-8">
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-2">
@@ -61,22 +61,20 @@ export default function TripsPage() {
         <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
           <button
             onClick={() => setSelectedDifficulty("All")}
-            className={`px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 ${
-              selectedDifficulty === "All"
-                ? "bg-gray-900 text-white shadow-lg scale-105"
-                : "bg-white text-gray-600 border border-gray-200 hover:border-gray-400"
-            }`}
+            className={`px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 ${selectedDifficulty === "All"
+              ? "bg-gray-900 text-white shadow-lg scale-105"
+              : "bg-white text-gray-600 border border-gray-200 hover:border-gray-400"
+              }`}
           >
             All Trips ({tripsData.length})
           </button>
 
           <button
             onClick={() => setSelectedDifficulty("Easy")}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 ${
-              selectedDifficulty === "Easy"
-                ? "bg-green-600 text-white shadow-lg scale-105"
-                : "bg-white text-gray-600 border border-gray-200 hover:border-green-400"
-            }`}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 ${selectedDifficulty === "Easy"
+              ? "bg-green-600 text-white shadow-lg scale-105"
+              : "bg-white text-gray-600 border border-gray-200 hover:border-green-400"
+              }`}
           >
             <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
             Easy ({tripsData.filter(t => t.difficulty === "Easy").length})
@@ -84,11 +82,10 @@ export default function TripsPage() {
 
           <button
             onClick={() => setSelectedDifficulty("Medium")}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 ${
-              selectedDifficulty === "Medium"
-                ? "bg-yellow-500 text-white shadow-lg scale-105"
-                : "bg-white text-gray-600 border border-gray-200 hover:border-yellow-400"
-            }`}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 ${selectedDifficulty === "Medium"
+              ? "bg-yellow-500 text-white shadow-lg scale-105"
+              : "bg-white text-gray-600 border border-gray-200 hover:border-yellow-400"
+              }`}
           >
             <span className="w-2 h-2 rounded-full bg-yellow-400 inline-block" />
             Medium ({tripsData.filter(t => t.difficulty === "Medium").length})
@@ -96,11 +93,10 @@ export default function TripsPage() {
 
           <button
             onClick={() => setSelectedDifficulty("Hard")}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 ${
-              selectedDifficulty === "Hard"
-                ? "bg-red-600 text-white shadow-lg scale-105"
-                : "bg-white text-gray-600 border border-gray-200 hover:border-red-400"
-            }`}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 ${selectedDifficulty === "Hard"
+              ? "bg-red-600 text-white shadow-lg scale-105"
+              : "bg-white text-gray-600 border border-gray-200 hover:border-red-400"
+              }`}
           >
             <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />
             Hard ({tripsData.filter(t => t.difficulty === "Hard").length})
@@ -114,10 +110,13 @@ export default function TripsPage() {
           </p>
         </div>
 
-        {/* Trips Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="flex flex-wrap justify-center gap-6 md:gap-8">
           {filteredTrips.map((trip) => (
-            <TripCard key={trip.id} {...trip} />
+            <TripCard
+              key={trip.id}
+              {...trip}
+              difficulty={trip.difficulty}
+            />
           ))}
         </div>
 

@@ -4,42 +4,74 @@ import Link from 'next/link';
 interface TripCardProps {
   id: number;
   title: string;
-  price: string;
-  difficulty: string;
   imageUrl: string;
-  difficultyColor: string;
+  difficulty?: 'Easy' | 'Medium' | 'Hard';
+  width?: string;
+  height?: string;
+  maxWidth?: string;
 }
 
-const TripCard: React.FC<TripCardProps> = ({ id, title, price, difficulty, imageUrl, difficultyColor }) => {
-  return (
-    <Link href={`/trips/${id}`} className="block group">
-      <div className="bg-white rounded-[20px] overflow-hidden shadow-sm flex flex-col cursor-pointer transition-transform hover:-translate-y-1 duration-300 border border-gray-100">
-        
-        <div className="relative h-[260px] w-full overflow-hidden">
-          <img
-            src={imageUrl}
-            alt={title}
-            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
-          />
-          <div className="absolute top-4 right-4 bg-[#FF7B29] text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-md z-10">
-            {price} DZD
-          </div>
-          <div className={`absolute bottom-4 right-4 ${difficultyColor} text-white text-sm font-semibold px-3 py-1.5 rounded-[8px] flex items-center gap-1.5 shadow-md z-10`}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M14 6l7 15H3l6-10 2 4 3-9z" />
-            </svg>
-            {difficulty}
-          </div>
-        </div>
+const TripCard: React.FC<TripCardProps> = ({ 
+  id, 
+  title, 
+  imageUrl, 
+  difficulty = 'Medium',
+  width = "580px",
+  height = "420px",
+  maxWidth = "none"
+}) => {
+  
+  // Difficulty color mapping
+  const difficultyColors = {
+    Easy: 'bg-[#12B872]/80 border-[0.5px] border-white/30 backdrop-blur-md shadow-inner',
+    Medium: 'bg-[#FF7800]/80 border-[0.5px] border-white/30 backdrop-blur-md shadow-inner',
+    Hard: 'bg-[#DD3131]/80 border-[0.5px] border-white/30 backdrop-blur-md shadow-inner'
+  };
 
-        <div className="p-4 px-5 flex justify-between items-center bg-white border-t border-gray-100">
-          <h3 className="font-serif text-xl font-bold text-gray-900">{title}</h3>
+  return (
+    <Link href={`/trips/${id}`} className="block group ">
+      <div 
+        className="relative mx-auto"
+        style={{ width, maxWidth}}
+      >
+        
+        {/* Main Card Container - Pill Shape */}
+        <div className="relative bg-white rounded-[100px] overflow-visible shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
           
-          <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center text-gray-500 group-hover:bg-[#FF7B29] group-hover:text-white transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-            </svg>
+          {/* Image Section - Pill Top with Custom Height */}
+          <div 
+            className="relative overflow-hidden rounded-t-[100px] rounded-b-[30px] rounnded-bl-[-100px] "
+            style={{ height }}
+          >
+            <img
+              src={imageUrl}
+              alt={title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            
+            {/* Difficulty Circle - Bottom Right */}
+            <div 
+              className={`absolute bottom-20 right-4 w-10 h-10 rounded-full shadow-lg ${difficultyColors[difficulty as keyof typeof difficultyColors]}`}
+              style={{
+                filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))'
+              }}
+            />
           </div>
+
+          {/* White Bottom Section - Overlaps Image */}
+          <div className="relative -mt-16 pt-6 pb-6 px-8 text-center rounded-tr-[50px] bg-white rounded-b-[100px]">
+            
+            {/* Trip Title */}
+            <h3 className="text-3xl md:text-4xl font-Montserrat font-semibold text-black uppercase tracking-tight mb-3">
+              {title}
+            </h3>
+
+            {/* Full Overview Button */}
+            <button className="inline-block px-8 py-2.5 border-2 border-[#E67E22]/40 text-[#E67E22] rounded-full font-Montserrat font-medium text-sm tracking-wider transition-all duration-300 hover:bg-[#E67E22] hover:text-white hover:scale-105 hover:border-[#E67E22]">
+              FULL OVERVIEW
+            </button>
+          </div>
+
         </div>
       </div>
     </Link>

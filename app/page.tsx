@@ -31,25 +31,34 @@ export default function Home() {
           {/* Difficulty Legend */}
           <div className="flex items-center justify-center gap-3 mb-14 border border-gray-300 rounded-full py-2 px-4 w-max mx-auto">
             <span className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 ">
-              <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
-              EASY
+              <span className="w-2 h-2 rounded-full bg-[#12B872]/80 inline-block" />
+              Easy
             </span>
             <span className="text-gray-300 text-sm">|</span>
             <span className="flex items-center gap-1.5 text-xs font-semibold text-gray-600">
-              <span className="w-2 h-2 rounded-full bg-yellow-400 inline-block" />
-              MEDIUM
+              <span className="w-2 h-2 rounded-full bg-[#FF7800]/80 inline-block" />
+              Medium
             </span>
             <span className="text-gray-300 text-sm">|</span>
             <span className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 ">
-              <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />
-              HARD
+              <span className="w-2 h-2 rounded-full bg-[#DD3131]/80 inline-block" />
+              Hard
             </span>
           </div>
 
-          {/* 2x2 Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Flexbox Layout - Cards can have different widths */}
+          <div className="flex flex-wrap justify-center gap-6 md:gap-8">
             {tripsData.map((trip) => (
-              <TripCard key={trip.id} {...trip} />
+              <TripCard 
+                key={trip.id} 
+                id={trip.id} 
+                title={trip.title} 
+                imageUrl={trip.imageUrl} 
+                difficulty={trip.difficulty} 
+                width={trip.width} 
+                height={trip.height} 
+                maxWidth={trip.maxWidth} 
+              />
             ))}
           </div>
 

@@ -1,11 +1,35 @@
-export const tripsData = [
+  type Difficulty = 'Easy' | 'Medium' | 'Hard';
+
+interface Trip {
+  id: number;
+  title: string;
+  price: string;
+  difficulty: Difficulty;
+  difficultyColor: string;
+  imageUrl: string;
+  width: string;
+  height: string;
+  maxWidth: string;
+  distance: string;
+  duration: string;
+  elevation: string;
+  description: string;
+  included: string[];
+  notIncluded: string[];
+  mapUrl: string;
+}
+
+export const tripsData: Trip[] = [
   {
     id: 1,
     title: "Tikjda",
     price: "2000",
     difficulty: "Hard",
-    difficultyColor: "bg-red-600",
+    difficultyColor: "bg-[#DD3131]/80 border-[0.5px] border-white/30 backdrop-blur-md shadow-inner",
     imageUrl: "/images/tikjda.svg",
+    width: "490px",
+    height: "300px",
+    maxWidth: "none",
     distance: "14 km",
     duration: "6-8 Hours",
     elevation: "850m",
@@ -24,8 +48,11 @@ export const tripsData = [
     title: "Lakhdaria",
     price: "2000",
     difficulty: "Medium",
-    difficultyColor: "bg-yellow-500",
+    difficultyColor: "bg-[#FF7800]/80 border-[0.5px] border-white/30 backdrop-blur-md shadow-inner",
     imageUrl: "/images/lakhdaria.svg",
+    width: "630px",
+    height: "300px",
+    maxWidth: "none",
     distance: "14 km",
     duration: "6-8 Hours",
     elevation: "850m",
@@ -44,8 +71,11 @@ export const tripsData = [
     title: "Djurdjura",
     price: "2000",
     difficulty: "Medium",
-    difficultyColor: "bg-yellow-500",
+    difficultyColor: "bg-[#FF7800]/80 border-[0.5px] border-white/30 backdrop-blur-md shadow-inner",
     imageUrl: "/images/djurdjura.svg",
+    width: "630px",
+    height: "300px",
+    maxWidth: "none",
     distance: "14 km",
     duration: "6-8 Hours",
     elevation: "850m",
@@ -64,8 +94,11 @@ export const tripsData = [
     title: "Lake Dhaya",
     price: "2000",
     difficulty: "Easy",
-    difficultyColor: "bg-green-600",
+    difficultyColor: "bg-[#12B872]/80 border-[0.5px] border-white/30 backdrop-blur-md shadow-inner",
     imageUrl: "/images/lake_dhaya.svg",
+    width: "490px",
+    height: "300px",
+    maxWidth: "none",
     distance: "5 km",
     duration: "3 Hours",
     elevation: "150m",
