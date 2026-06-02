@@ -1,21 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;600;700&family=Inter:wght@400;500;600&display=swap');
-
 @import "tailwindcss";
 
-/* Tailwind v4 Theme Tokens */
-@theme {
-  /* Colors */
-  --color-primary: #F97316;
-  --color-primary-hover: #ea580c;
-
-  /* Fonts */
-  --font-playfair: "Playfair", serif;
-  --font-serif: "Source Serif 4", serif;
-  --font-sans: "Inter", sans-serif;
+body {
+  font-family: var(--font-geist-sans);
+  background-color: #f3f4f6;
 }
 
-/* Utility font classes (used in Tailwind component classes) */
 .font-playfair {
   font-family: var(--font-playfair);
 }
@@ -24,8 +13,68 @@
   font-family: var(--font-montserrat);
 }
 
-/* Base styles */
+/* Base */
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-geist-sans);
   background-color: #f3f4f6;
+}
+
+/* Font utilities */
+.font-playfair {
+  font-family: var(--font-playfair);
+}
+
+.font-montserrat {
+  font-family: var(--font-montserrat);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FF7B29 0%, #e67022 100%);
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #e67022 0%, #d66520 100%);
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #FF7B29 #f1f1f1;
 }

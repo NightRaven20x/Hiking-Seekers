@@ -111,11 +111,14 @@ export default function TripsPage() {
         </div>
 
         <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-          {filteredTrips.map((trip) => (
+          {filteredTrips.map((trip, index) => (
             <TripCard
               key={trip.id}
-              {...trip}
+              id={trip.id}
+              title={trip.title}
+              imageUrl={trip.imageUrl}
               difficulty={trip.difficulty}
+              variant={index % 2 === 0 ? 'compact' : 'wide'}
             />
           ))}
         </div>

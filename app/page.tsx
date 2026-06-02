@@ -1,6 +1,5 @@
 import Hero from "./Components/Hero";
 import StatsBar from "./Components/StatsBar";
-import "./globals.css";
 import Navbar from "./Components/Navbar";
 import TripCard from "./Components/TripCard";
 import Footer from "./Components/Footer";
@@ -48,16 +47,14 @@ export default function Home() {
 
           {/* Flexbox Layout - Cards can have different widths */}
           <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-            {tripsData.map((trip) => (
-              <TripCard 
-                key={trip.id} 
-                id={trip.id} 
-                title={trip.title} 
-                imageUrl={trip.imageUrl} 
-                difficulty={trip.difficulty} 
-                width={trip.width} 
-                height={trip.height} 
-                maxWidth={trip.maxWidth} 
+            {tripsData.map((trip, index) => (
+              <TripCard
+                key={trip.id}
+                id={trip.id}
+                title={trip.title}
+                imageUrl={trip.imageUrl}
+                difficulty={trip.difficulty}
+                variant={index % 2 === 0 ? 'compact' : 'wide'}
               />
             ))}
           </div>

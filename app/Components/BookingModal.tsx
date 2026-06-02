@@ -1,128 +1,178 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { supabase } from "../lib/supabase";
 
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   tripTitle: string;
-  tripPrice: string;
+  tripPrice: number;
   tripId: number;
 }
 
-export default function BookingModal({ isOpen, onClose, tripTitle, tripPrice, tripId }: BookingModalProps) {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    phone: "",
-    seats: 1,
-    idPhotos: [null] as (File | null)[],
-    paymentMethod: "cash",
-    agreeTerms: false
-  });
+interface Person {
+  name: string;
+  phone: string;
+  idPhoto: File | null;
+  idPhotoPreview: string | null;
+}
 
+export default function BookingModal({ isOpen, onClose, tripTitle, tripPrice, tripId }: BookingModalProps) {
+  const [seats, setSeats] = useState(1);
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [persons, setPersons] = useState<Person[]>([{ name: "", phone: "", idPhoto: null, idPhotoPreview: null }]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
 
-  // Update ID photos array when seats change
   useEffect(() => {
-    const seatCount = Math.max(1, Math.min(10, formData.seats || 1)); // Ensure valid range
-    const newIdPhotos = Array.from({ length: seatCount }, (_, index) => 
-      formData.idPhotos[index] || null
-    );
-    setFormData(prev => ({ ...prev, idPhotos: newIdPhotos }));
-  }, [formData.seats]);
+    const validSeats = Math.max(1, Math.min(10, seats));
+    setPersons(prev => {
+      const updated = [...prev];
+      while (updated.length < validSeats) {
+        updated.push({ name: "", phone: "", idPhoto: null, idPhotoPreview: null });
+      }
+      return updated.slice(0, validSeats);
+    });
+  }, [seats]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    
-    if (type === "checkbox") {
-      const target = e.target as HTMLInputElement;
-      setFormData({ ...formData, [name]: target.checked });
-    } else if (name === "seats") {
-      const seats = parseInt(value) || 1; // Default to 1 if NaN
-      const validSeats = Math.max(1, Math.min(10, seats)); // Clamp between 1-10
-      setFormData({ ...formData, seats: validSeats });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors({ ...errors, [name]: "" });
-    }
+  const handlePersonChange = (index: number, field: "name" | "phone", value: string) => {
+    setPersons(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+    setErrors(prev => ({ ...prev, [`person${index}_${field}`]: "" }));
+    setSubmitError("");
   };
 
   const handleFileChange = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setErrors({ ...errors, [`idPhoto${index}`]: "File size must be less than 5MB" });
-        return;
-      }
-      // Validate file type
-      if (!file.type.startsWith("image/")) {
-        setErrors({ ...errors, [`idPhoto${index}`]: "Please upload an image file" });
-        return;
-      }
-      
-      const newIdPhotos = [...formData.idPhotos];
-      newIdPhotos[index] = file;
-      setFormData({ ...formData, idPhotos: newIdPhotos });
-      setErrors({ ...errors, [`idPhoto${index}`]: "" });
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors(prev => ({ ...prev, [`person${index}_idPhoto`]: "File size must be less than 5MB" }));
+      return;
     }
+    if (!file.type.startsWith("image/")) {
+      setErrors(prev => ({ ...prev, [`person${index}_idPhoto`]: "Please upload an image file" }));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPersons(prev => {
+        const updated = [...prev];
+        updated[index] = {
+          ...updated[index],
+          idPhoto: file,
+          idPhotoPreview: reader.result as string
+        };
+        return updated;
+      });
+    };
+    reader.readAsDataURL(file);
+    setErrors(prev => ({ ...prev, [`person${index}_idPhoto`]: "" }));
   };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
-    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
-    
-    // Validate all ID photos are uploaded
-    formData.idPhotos.forEach((photo, index) => {
-      if (!photo) {
-        newErrors[`idPhoto${index}`] = `ID photo for person ${index + 1} is required`;
+    persons.forEach((person, index) => {
+      if (!person.name.trim()) newErrors[`person${index}_name`] = "Name is required";
+      if (index === 0) {
+        if (!person.phone.trim()) {
+          newErrors[`person${index}_phone`] = "Phone is required";
+        } else if (!/^\+?[\d]{8,15}$/.test(person.phone.replace(/\s/g, "").replace(/-/g, ""))) {
+          newErrors[`person${index}_phone`] = "Enter a valid phone number";
+        }
       }
+      if (!person.idPhoto) newErrors[`person${index}_idPhoto`] = "ID photo is required";
     });
-    
-    if (!formData.agreeTerms) newErrors.agreeTerms = "You must agree to terms and conditions";
+
+    if (!agreeTerms) newErrors.agreeTerms = "You must agree to the terms";
 
     setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      const firstErrorKey = Object.keys(newErrors)[0];
+      const firstErrorEl = formRef.current?.querySelector(`[data-error="${firstErrorKey}"]`);
+      firstErrorEl?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
+    setUploadProgress(0);
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Booking submitted:", formData);
-      setIsSubmitting(false);
-      setSubmitSuccess(true);
-      
-      // Reset form after 3 seconds and close modal
-      setTimeout(() => {
-        setSubmitSuccess(false);
-        onClose();
-        // Reset form
-        setFormData({
-          fullName: "",
-          phone: "",
-          seats: 1,
-          idPhotos: [null],
-          paymentMethod: "cash",
-          agreeTerms: false
+    try {
+      // Upload photos to Supabase Storage first
+      const personsPayload = [];
+      for (let i = 0; i < persons.length; i++) {
+        const person = persons[i];
+        let photoPath = "";
+
+        if (person.idPhoto) {
+          const extension = person.idPhoto.name.split(".").pop() || "jpg";
+          const fileName = `temp_${Date.now()}_person${i + 1}.${extension}`;
+
+          const { error: uploadError } = await supabase.storage
+            .from("id-photos")
+            .upload(fileName, person.idPhoto);
+
+          if (!uploadError) photoPath = fileName;
+        }
+
+        personsPayload.push({
+          name: person.name,
+          phone: person.phone,
+          photoPath,
         });
-      }, 3000);
-    }, 2000);
+
+        setUploadProgress(Math.round(((i + 1) / persons.length) * 100));
+      }
+
+      // Send to API route
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tripId,
+          tripTitle,
+          seats,
+          persons: personsPayload,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitSuccess(true);
+        setTimeout(() => {
+          setSubmitSuccess(false);
+          onClose();
+          setSeats(1);
+          setAgreeTerms(false);
+          setPersons([{ name: "", phone: "", idPhoto: null, idPhotoPreview: null }]);
+          setUploadProgress(0);
+        }, 3000);
+      }
+
+    } catch (error) {
+      console.error("Submission error:", error);
+      setSubmitError("Something went wrong. Please try again or contact us on WhatsApp.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -130,16 +180,18 @@ export default function BookingModal({ isOpen, onClose, tripTitle, tripPrice, tr
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
       <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-slideUp custom-scrollbar">
-        
+
         {/* Header */}
         <div className="sticky top-0 bg-gradient-to-r from-[#FF7B29] to-[#e67022] text-white p-6 rounded-t-2xl z-10">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-3xl font-serif font-bold mb-2">Book Your Adventure</h2>
-              <p className="text-white/90">{tripTitle} - {tripPrice} DZD per person</p>
+              <p className="text-white/90">{tripTitle} — {tripPrice.toLocaleString()} DZD per person</p>
             </div>
             <button
+              type="button"
               onClick={onClose}
+              aria-label="Close booking modal"
               className="text-white hover:bg-white/20 rounded-full p-2 transition-colors"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -149,7 +201,7 @@ export default function BookingModal({ isOpen, onClose, tripTitle, tripPrice, tr
           </div>
         </div>
 
-        {/* Success Message */}
+        {/* Success */}
         {submitSuccess && (
           <div className="m-6 p-6 bg-green-50 border-2 border-green-500 rounded-xl text-center">
             <div className="text-6xl mb-4">✓</div>
@@ -158,178 +210,213 @@ export default function BookingModal({ isOpen, onClose, tripTitle, tripPrice, tr
           </div>
         )}
 
+        {/* Error */}
+        {submitError && (
+          <div className="mx-6 mt-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm flex items-center gap-3">
+            <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p className="font-semibold">Booking failed</p>
+              <p>{submitError}</p>
+              <a href="https://wa.me/213555784450" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline font-semibold mt-1 inline-block">
+                Contact us on WhatsApp →
+              </a>
+            </div>
+          </div>
+        )}
+
         {/* Form */}
         {!submitSuccess && (
-          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <form ref={formRef} onSubmit={handleSubmit} className="p-6 space-y-6">
 
-            {/* Personal Information Section */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-serif font-bold text-gray-900 border-b pb-2">Personal Information</h3>
-              
-              {/* Full Name */}
-              <div>
-                <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  id="fullName"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FF7B29] focus:border-transparent transition-all outline-none ${
-                    errors.fullName ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="Mohamed Ali"
-                />
-                {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
-              </div>
-
-              {/* Phone */}
-              <div>
-                <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Phone Number (WhatsApp) *
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FF7B29] focus:border-transparent transition-all outline-none ${
-                    errors.phone ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="+213 555 123 456"
-                />
-                {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
-              </div>
-            </div>
-
-            {/* Booking Details Section */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-serif font-bold text-gray-900 border-b pb-2">Booking Details</h3>
-              
-              {/* Seats & Payment Method */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="seats" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Number of Seats *
-                  </label>
-                  <input
-                    type="number"
-                    id="seats"
-                    name="seats"
-                    min="1"
-                    max="10"
-                    value={formData.seats.toString()}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF7B29] focus:border-transparent transition-all outline-none"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Total: {parseInt(tripPrice) * formData.seats} DZD</p>
-                </div>
-
-                <div>
-                  <label htmlFor="paymentMethod" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Payment Method *
-                  </label>
-                  <select
-                    id="paymentMethod"
-                    name="paymentMethod"
-                    value={formData.paymentMethod}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF7B29] focus:border-transparent transition-all outline-none"
-                  >
-                    <option value="cash">Cash (Pay on trip)</option>
-                    <option value="ccp">CCP Transfer</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* ID Verification Section - Dynamic based on seats */}
+            {/* Booking Details */}
             <div className="space-y-4">
               <h3 className="text-xl font-serif font-bold text-gray-900 border-b pb-2">
-                ID Verification
-                {formData.seats > 1 && (
-                  <span className="text-sm font-normal text-gray-600 ml-2">
-                    (Upload ID photo for each person)
-                  </span>
-                )}
+                Booking Details
               </h3>
-              
-              {/* Dynamic ID Photo Uploads */}
-              <div className="space-y-4">
-                {formData.idPhotos.map((photo, index) => (
-                  <div key={index}>
-                    <label htmlFor={`idPhoto${index}`} className="block text-sm font-semibold text-gray-700 mb-2">
-                      {formData.seats > 1 ? `ID Photo - Person ${index + 1} *` : "ID Photo *"}
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="file"
-                        id={`idPhoto${index}`}
-                        name={`idPhoto${index}`}
-                        accept="image/*"
-                        onChange={handleFileChange(index)}
-                        className="hidden"
-                      />
-                      <label
-                        htmlFor={`idPhoto${index}`}
-                        className={`flex items-center justify-center w-full px-4 py-6 border-2 border-dashed rounded-lg cursor-pointer transition-all ${
-                          errors[`idPhoto${index}`] ? "border-red-500 bg-red-50" : "border-gray-300 hover:border-[#FF7B29] bg-gray-50 hover:bg-orange-50"
-                        }`}
-                      >
-                        <div className="text-center">
-                          {photo ? (
-                            <>
-                              <svg className="w-8 h-8 mx-auto mb-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                              </svg>
-                              <p className="text-sm text-gray-600">{photo.name}</p>
-                              <p className="text-xs text-gray-400 mt-1">Click to change</p>
-                            </>
-                          ) : (
-                            <>
-                              <svg className="w-8 h-8 mx-auto mb-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                              </svg>
-                              <p className="text-sm text-gray-600">Click to upload or drag and drop</p>
-                              <p className="text-xs text-gray-400 mt-1">PNG, JPG up to 5MB</p>
-                            </>
-                          )}
-                        </div>
-                      </label>
-                    </div>
-                    {errors[`idPhoto${index}`] && <p className="text-red-500 text-xs mt-1">{errors[`idPhoto${index}`]}</p>}
-                  </div>
-                ))}
+
+              {/* Seats Stepper */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Number of Seats *
+                </label>
+                <div className="flex items-center gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setSeats(s => Math.max(1, s - 1))}
+                    className="w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-600 hover:border-[#FF7B29] hover:text-[#FF7B29] transition-colors text-xl font-bold"
+                  >
+                    −
+                  </button>
+                  <span className="text-2xl font-bold text-gray-900 w-8 text-center">
+                    {seats}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setSeats(s => Math.min(10, s + 1))}
+                    className="w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-600 hover:border-[#FF7B29] hover:text-[#FF7B29] transition-colors text-xl font-bold"
+                  >
+                    +
+                  </button>
+                  <span className="text-sm text-gray-500 ml-2">
+                    Total: <span className="font-bold text-gray-900">{(tripPrice * seats).toLocaleString()} DZD</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Payment */}
+              <div className="flex items-center gap-3 bg-gray-50 rounded-xl px-5 py-4">
+                <svg className="w-5 h-5 text-[#FF7B29]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-semibold text-gray-700">Payment Method</p>
+                  <p className="text-sm text-gray-500">Cash — paid on the day of the trip</p>
+                </div>
               </div>
             </div>
 
-            {/* Terms & Conditions */}
-            <div className="bg-gray-50 p-4 rounded-lg">
+            {/* Participants */}
+            <div className="space-y-4">
+              <h3 className="text-xl font-serif font-bold text-gray-900 border-b pb-2">
+                Participants
+              </h3>
+
+              {persons.map((person, index) => (
+                <div key={index} className="bg-gray-50 rounded-xl p-5 space-y-4">
+                  <h4 className="font-semibold text-gray-800 font-montserrat">
+                    {index === 0 ? "Person 1 — Booking Contact" : `Person ${index + 1}`}
+                  </h4>
+
+                  {/* Name */}
+                  <div data-error={`person${index}_name`}>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={person.name}
+                      onChange={e => handlePersonChange(index, "name", e.target.value)}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FF7B29] focus:border-transparent transition-all outline-none bg-white ${errors[`person${index}_name`] ? "border-red-500" : "border-gray-300"
+                        }`}
+                      placeholder="Mohamed Ali"
+                    />
+                    {errors[`person${index}_name`] && (
+                      <p className="text-red-500 text-xs mt-1">{errors[`person${index}_name`]}</p>
+                    )}
+                  </div>
+
+                  {/* Phone - only person 1 */}
+                  {index === 0 && (
+                    <div data-error={`person${index}_phone`}>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Phone Number (WhatsApp) *
+                      </label>
+                      <input
+                        type="tel"
+                        value={person.phone}
+                        onChange={e => handlePersonChange(index, "phone", e.target.value)}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FF7B29] focus:border-transparent transition-all outline-none bg-white ${errors[`person${index}_phone`] ? "border-red-500" : "border-gray-300"
+                          }`}
+                        placeholder="+213 555 123 456"
+                      />
+                      {errors[`person${index}_phone`] && (
+                        <p className="text-red-500 text-xs mt-1">{errors[`person${index}_phone`]}</p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* ID Photo */}
+                  <div data-error={`person${index}_idPhoto`}>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      ID Photo *
+                    </label>
+                    <input
+                      type="file"
+                      id={`idPhoto${index}`}
+                      accept="image/*"
+                      onChange={handleFileChange(index)}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor={`idPhoto${index}`}
+                      className={`flex items-center justify-center w-full border-2 border-dashed rounded-lg cursor-pointer transition-all overflow-hidden ${errors[`person${index}_idPhoto`]
+                        ? "border-red-500 bg-red-50"
+                        : "border-gray-300 hover:border-[#FF7B29] bg-white hover:bg-orange-50"
+                        }`}
+                    >
+                      {person.idPhotoPreview ? (
+                        <div className="relative w-full h-48">
+                          <img
+                            src={person.idPhotoPreview}
+                            alt="ID Preview"
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                            <p className="text-white text-sm font-semibold">Click to change</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center py-8 px-4">
+                          <svg className="w-8 h-8 mx-auto mb-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                          </svg>
+                          <p className="text-sm text-gray-600">Click to upload ID photo</p>
+                          <p className="text-xs text-gray-400 mt-1">PNG, JPG up to 5MB</p>
+                        </div>
+                      )}
+                    </label>
+                    {errors[`person${index}_idPhoto`] && (
+                      <p className="text-red-500 text-xs mt-1">{errors[`person${index}_idPhoto`]}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Terms */}
+            <div className="bg-gray-50 p-4 rounded-lg" data-error="agreeTerms">
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  name="agreeTerms"
-                  checked={formData.agreeTerms}
-                  onChange={handleChange}
+                  checked={agreeTerms}
+                  onChange={e => setAgreeTerms(e.target.checked)}
                   className="mt-1 w-5 h-5 text-[#FF7B29] border-gray-300 rounded focus:ring-[#FF7B29]"
                 />
                 <span className="text-sm text-gray-700">
-                  I agree to the <a href="/terms" className="text-[#FF7B29] hover:underline">terms and conditions</a> and understand that:
-                  <ul className="list-disc ml-5 mt-2 space-y-1 text-xs">
-                    <li>Payment must be completed before the trip date</li>
-                    <li>Cancellations must be made 48 hours in advance</li>
-                    <li>I am physically fit for hiking activities</li>
-                    <li>Weather conditions may affect trip schedule</li>
-                  </ul>
+                  I have read and agree to the{" "}
+                  <a href="/terms" target="_blank" className="text-[#FF7B29] hover:underline font-semibold">
+                    Terms and Conditions
+                  </a>{" "}
+                  and{" "}
+                  <a href="/privacy" target="_blank" className="text-[#FF7B29] hover:underline font-semibold">
+                    Privacy Policy
+                  </a>
                 </span>
               </label>
-              {errors.agreeTerms && <p className="text-red-500 text-xs mt-2">{errors.agreeTerms}</p>}
+              {errors.agreeTerms && (
+                <p className="text-red-500 text-xs mt-2">{errors.agreeTerms}</p>
+              )}
             </div>
 
-            {/* Submit Button */}
+            {/* Upload Progress */}
+            {isSubmitting && (
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm text-gray-600">
+                  <span>Uploading...</span>
+                  <span>{uploadProgress}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-[#FF7B29] h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Submit */}
             <div className="flex gap-4 pt-4">
               <button
                 type="button"
@@ -341,69 +428,18 @@ export default function BookingModal({ isOpen, onClose, tripTitle, tripPrice, tr
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`flex-1 px-6 py-4 font-bold rounded-full transition-all ${
-                  isSubmitting
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-[#FF7B29] hover:bg-orange-600 hover:scale-105 shadow-lg"
-                } text-white`}
+                className={`flex-1 px-6 py-4 font-bold rounded-full transition-all ${isSubmitting
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#FF7B29] hover:bg-orange-600 hover:scale-105 shadow-lg"
+                  } text-white`}
               >
-                {isSubmitting ? "Submitting..." : "Confirm Booking"}
+                {isSubmitting ? `Uploading... ${uploadProgress}%` : "Confirm Booking"}
               </button>
             </div>
 
           </form>
         )}
       </div>
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.2s ease-out;
-        }
-        .animate-slideUp {
-          animation: slideUp 0.3s ease-out;
-        }
-
-        /* Custom Scrollbar Styles */
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 12px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 10px;
-          margin: 10px 0;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: linear-gradient(180deg, #FF7B29 0%, #e67022 100%);
-          border-radius: 10px;
-          border: 2px solid #f1f1f1;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(180deg, #e67022 0%, #d66520 100%);
-        }
-
-        /* Firefox */
-        .custom-scrollbar {
-          scrollbar-width: thin;
-          scrollbar-color: #FF7B29 #f1f1f1;
-        }
-      `}</style>
     </div>
   );
 }

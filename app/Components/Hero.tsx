@@ -1,9 +1,9 @@
 import Image from "next/image";
-import Link from "next/link"; // Assuming you need this later
+import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="relative h-screen min-h-[600px] w-full overflow-hidden rounded-b-[50px]">
+    <section className="relative h-screen min-h-[80px] w-full overflow-hidden rounded-b-[50px]">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image

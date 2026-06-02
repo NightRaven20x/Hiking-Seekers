@@ -1,15 +1,11 @@
-  type Difficulty = 'Easy' | 'Medium' | 'Hard';
+type Difficulty = 'Easy' | 'Medium' | 'Hard';
 
 interface Trip {
   id: number;
   title: string;
-  price: string;
+  price: number;
   difficulty: Difficulty;
-  difficultyColor: string;
   imageUrl: string;
-  width: string;
-  height: string;
-  maxWidth: string;
   distance: string;
   duration: string;
   elevation: string;
@@ -23,19 +19,15 @@ export const tripsData: Trip[] = [
   {
     id: 1,
     title: "Tikjda",
-    price: "2000",
+    price: 2000,
     difficulty: "Hard",
-    difficultyColor: "bg-[#DD3131]/80 border-[0.5px] border-white/30 backdrop-blur-md shadow-inner",
     imageUrl: "/images/tikjda.svg",
-    width: "490px",
-    height: "300px",
-    maxWidth: "none",
     distance: "14 km",
     duration: "6-8 Hours",
     elevation: "850m",
     description: "A challenging but incredibly rewarding hike through the stunning Djurdjura National Park. Experience breathtaking panoramic views, dense cedar forests, and the rugged beauty of the mountains. We will have designated stops along the trail to rest, take photos, and eat food/snacks.",
     included: [
-      "Professional Local Guide", 
+      "Professional Local Guide",
       "Round-trip Transport (From Algiers)"
     ],
     notIncluded: [
@@ -46,19 +38,15 @@ export const tripsData: Trip[] = [
   {
     id: 2,
     title: "Lakhdaria",
-    price: "2000",
+    price: 2000,
     difficulty: "Medium",
-    difficultyColor: "bg-[#FF7800]/80 border-[0.5px] border-white/30 backdrop-blur-md shadow-inner",
     imageUrl: "/images/lakhdaria.svg",
-    width: "630px",
-    height: "300px",
-    maxWidth: "none",
     distance: "14 km",
     duration: "6-8 Hours",
     elevation: "850m",
     description: "Join us for a tough but rewarding hike through the stunning mountains of Lakhdaria. Trek along the famous Ammal gorges and enjoy amazing views of the green valleys below. We will take regular breaks along the way to rest, eat snacks, and take photos of the scenery.",
     included: [
-      "Professional Local Guide", 
+      "Professional Local Guide",
       "Round-trip Transport (From Algiers)"
     ],
     notIncluded: [
@@ -69,19 +57,15 @@ export const tripsData: Trip[] = [
   {
     id: 3,
     title: "Djurdjura",
-    price: "2000",
+    price: 2000,
     difficulty: "Medium",
-    difficultyColor: "bg-[#FF7800]/80 border-[0.5px] border-white/30 backdrop-blur-md shadow-inner",
     imageUrl: "/images/djurdjura.svg",
-    width: "630px",
-    height: "300px",
-    maxWidth: "none",
     distance: "14 km",
     duration: "6-8 Hours",
     elevation: "850m",
     description: "Take on a tough but rewarding hike through the beautiful Djurdjura National Park. Walk through thick cedar forests and see amazing views of the rugged mountains. We will take regular breaks along the way to rest, eat snacks, and take photos.",
     included: [
-      "Professional Local Guide", 
+      "Professional Local Guide",
       "Round-trip Transport (From Algiers)"
     ],
     notIncluded: [
@@ -92,19 +76,15 @@ export const tripsData: Trip[] = [
   {
     id: 4,
     title: "Lake Dhaya",
-    price: "2000",
+    price: 2000,
     difficulty: "Easy",
-    difficultyColor: "bg-[#12B872]/80 border-[0.5px] border-white/30 backdrop-blur-md shadow-inner",
     imageUrl: "/images/lake_dhaya.svg",
-    width: "490px",
-    height: "300px",
-    maxWidth: "none",
     distance: "5 km",
     duration: "3 Hours",
     elevation: "150m",
     description: "A relaxing walk around the serene Lake Dhaya, perfect for beginners and photography. Enjoy the peaceful atmosphere and stunning views of the surrounding landscape.",
     included: [
-      "Professional Local Guide", 
+      "Professional Local Guide",
       "Round-trip Transport (From Algiers)"
     ],
     notIncluded: [

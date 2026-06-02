@@ -76,7 +76,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Links */}
-          <div className="hidden md:flex items-center font-Montserrat font-medium gap-8">
+          <div className="hidden md:flex items-center font-montserrat font-medium gap-8">
             <Link
               href="/"
               className={`text-m font-medium transition-all duration-300 ${isActive("/") 
@@ -112,7 +112,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Book Now Button */}
-          <button className={`hidden md:block px-8 py-2.5 rounded-full text-m font-Montserrat font-semibold transition-all duration-300 hover:scale-105 ${
+          <button className={`hidden md:block px-8 py-2.5 rounded-full text-m font-montserrat font-semibold transition-all duration-300 hover:scale-105 ${
             isScrolled 
               ? "bg-gray-900 text-white hover:bg-gray-800 shadow-md" 
               : "bg-[#1B4332] text-white hover:bg-[#153526] shadow-[0_4px_16px_rgba(0,0,0,0.2)] backdrop-blur-sm"
@@ -171,7 +171,7 @@ export default function Navbar() {
         }`}
       >
         <div className="flex flex-col h-full pt-24 px-6">
-          <div className="flex flex-col gap-6 font-Montserrat font-medium">
+          <div className="flex flex-col gap-6 font-montserrat font-medium">
             <Link
               href="/"
               className={`text-lg transition-colors ${
@@ -207,7 +207,7 @@ export default function Navbar() {
           </div>
 
           <div className="mt-8">
-            <button className="w-full px-6 py-3 bg-[#1B4332] text-white font-Montserrat font-semibold rounded-full hover:bg-[#153526] transition-colors">
+            <button className="w-full px-6 py-3 bg-[#1B4332] text-white font-montserrat font-semibold rounded-full hover:bg-[#153526] transition-colors">
               Book Now
             </button>
           </div>
