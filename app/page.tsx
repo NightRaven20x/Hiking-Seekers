@@ -6,6 +6,7 @@ import Footer from "./Components/Footer";
 import Gallery from "./Components/Gallery";
 import QuoteSection from "./Components/QuoteSection";
 import { tripsData } from "./data/trips";
+import UpcomingTrips from "./Components/UpcomingTrips";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Hero />
       <StatsBar />
       <QuoteSection />
+      <UpcomingTrips />
 
       {/* Trips Section */}
       <section className="mt-20 px-6">
