@@ -18,7 +18,7 @@ export default function AboutPage() {
     {
       icon: TbCertificate,
       title: "Certified & Insured",
-      description: "All our guides are professionally certified and our trips are fully insured for your peace of mind on every adventure."
+      description: "All our guides are professionally certified and our Trips are fully insured for your peace of mind on every adventure."
     },
     {
       icon: TbHeart,

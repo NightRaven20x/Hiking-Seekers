@@ -59,7 +59,7 @@ export default function ContactPage() {
             Get In Touch
           </h1>
           <p className="font-montserrat text-white text-lg md:text-xl max-w-2xl drop-shadow-md">
-            Have questions about our trips? We're here to help plan your perfect adventure
+            Have questions about our Trips? We're here to help plan your perfect adventure
           </p>
         </div>
       </section>

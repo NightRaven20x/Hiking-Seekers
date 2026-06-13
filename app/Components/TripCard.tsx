@@ -40,7 +40,7 @@ const TripCard: React.FC<TripCardProps> = ({
   const { card, image } = variantConfig[variant];
 
   return (
-    <Link href={`/trips/${id}`} className="block group w-full sm:w-auto">
+    <Link href={`/Trips/${id}`} className="block group w-full sm:w-auto">
       <div className={`relative mx-auto ${card}`}>
 
         {/* Card Container */}

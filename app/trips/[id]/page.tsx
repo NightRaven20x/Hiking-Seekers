@@ -1,7 +1,7 @@
 import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
 import { notFound } from "next/navigation";
-import { tripsData } from "../../data/trips";
+import { TripsData } from "../../data/Trips";
 import TripDetailClient from "../../Components/TripDetailClient";
 
 export default async function TripDetails({ params }: { params: Promise<{ id: string }> }) {
@@ -9,7 +9,7 @@ export default async function TripDetails({ params }: { params: Promise<{ id: st
   const { id } = await params;
   
   // Find the trip
-  const trip = tripsData.find((t) => t.id.toString() === id);
+  const trip = TripsData.find((t) => t.id.toString() === id);
 
   // If trip not found, show 404
   if (!trip) notFound();

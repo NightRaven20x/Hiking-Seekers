@@ -4,16 +4,16 @@ import { useState } from "react";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import TripCard from "../Components/TripCard";
-import { tripsData } from "../data/trips";
+import { TripsData } from "../data/Trips";
 import Image from "next/image";
 
 export default function TripsPage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("All");
 
-  // Filter trips based on selected difficulty
+  // Filter Trips based on selected difficulty
   const filteredTrips = selectedDifficulty === "All"
-    ? tripsData
-    : tripsData.filter(trip => trip.difficulty === selectedDifficulty);
+    ? TripsData
+    : TripsData.filter(trip => trip.difficulty === selectedDifficulty);
 
   return (
     <main className="min-h-screen bg-[#F3F4F6]">
@@ -36,7 +36,7 @@ export default function TripsPage() {
 
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-4">
           <h1 className="font-playfair font-medium italic text-white text-5xl md:text-7xl mb-4 drop-shadow-lg">
-            Explore Our Trips
+            Explore Our Destinations
           </h1>
           <p className="font-montserrat text-white text-lg md:text-xl max-w-2xl drop-shadow-md">
             Choose your next adventure from our curated collection of Algeria's most breathtaking trails
@@ -50,7 +50,7 @@ export default function TripsPage() {
         {/* Filter Heading */}
         <div className="text-center mb-8">
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-            Find Your Perfect Trail
+            Find Your Perfect Destinations
           </h2>
           <p className="text-gray-500 text-lg">
             Filter by difficulty level to match your experience
@@ -66,7 +66,7 @@ export default function TripsPage() {
               : "bg-white text-gray-600 border border-gray-200 hover:border-gray-400"
               }`}
           >
-            All Trips ({tripsData.length})
+            All Destinations ({TripsData.length})
           </button>
 
           <button
@@ -77,7 +77,7 @@ export default function TripsPage() {
               }`}
           >
             <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
-            Easy ({tripsData.filter(t => t.difficulty === "Easy").length})
+            Easy ({TripsData.filter(t => t.difficulty === "Easy").length})
           </button>
 
           <button
@@ -88,7 +88,7 @@ export default function TripsPage() {
               }`}
           >
             <span className="w-2 h-2 rounded-full bg-yellow-400 inline-block" />
-            Medium ({tripsData.filter(t => t.difficulty === "Medium").length})
+            Medium ({TripsData.filter(t => t.difficulty === "Medium").length})
           </button>
 
           <button
@@ -99,14 +99,14 @@ export default function TripsPage() {
               }`}
           >
             <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />
-            Hard ({tripsData.filter(t => t.difficulty === "Hard").length})
+            Hard ({TripsData.filter(t => t.difficulty === "Hard").length})
           </button>
         </div>
 
         {/* Results Count */}
         <div className="text-center mb-8">
           <p className="text-gray-600 text-sm">
-            Showing <span className="font-bold text-gray-900">{filteredTrips.length}</span> {filteredTrips.length === 1 ? 'trip' : 'trips'}
+            Showing <span className="font-bold text-gray-900">{filteredTrips.length}</span> {filteredTrips.length === 1 ? 'trip' : 'Trips'}
           </p>
         </div>
 
@@ -128,7 +128,7 @@ export default function TripsPage() {
           <div className="text-center py-20">
             <div className="text-6xl mb-4">🏔️</div>
             <h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">
-              No trips found
+              No Trips found
             </h3>
             <p className="text-gray-500 mb-6">
               Try selecting a different difficulty level

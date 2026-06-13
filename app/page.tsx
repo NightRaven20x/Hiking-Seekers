@@ -5,8 +5,8 @@ import TripCard from "./Components/TripCard";
 import Footer from "./Components/Footer";
 import Gallery from "./Components/Gallery";
 import QuoteSection from "./Components/QuoteSection";
-import { tripsData } from "./data/trips";
-import UpcomingTrips from "./Components/UpcomingTrips";
+import { TripsData } from "./data/Trips";
+import Upcomingtrips from "./Components/UpcomingTrips";
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
       <Hero />
       <StatsBar />
       <QuoteSection />
-      <UpcomingTrips />
+      <Upcomingtrips />
 
       {/* Trips Section */}
       <section className="mt-20 px-6">
@@ -49,7 +49,7 @@ export default function Home() {
 
           {/* Flexbox Layout - Cards can have different widths */}
           <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-            {tripsData.map((trip, index) => (
+            {TripsData.map((trip, index) => (
               <TripCard
                 key={trip.id}
                 id={trip.id}

@@ -41,7 +41,7 @@ export default function Hero() {
           Where Adventure Meets Heritage
         </p>
  
-        <Link href="/trips">
+        <Link href="/Trips">
           <button className="font-montserrat px-7 sm:px-8 md:px-10 py-3 sm:py-3 md:py-3.5 text-base sm:text-base md:text-lg font-bold text-white tracking-[1.5px] sm:tracking-[1.5px] md:tracking-[2px] rounded-full bg-[#E67E22]/70 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.3),inset_0_2px_4px_rgba(255,255,255,0.4)] transition-all duration-300 hover:scale-105 hover:bg-[#E67E22]/85 active:scale-95 focus:outline-none focus:ring-4 focus:ring-[#E67E22]/50">
             View Upcoming Trips
           </button>

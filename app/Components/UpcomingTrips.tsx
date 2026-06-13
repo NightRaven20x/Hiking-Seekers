@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-import { tripsData } from "../data/trips";
+import { TripsData } from "../data/Trips";
 import Link from "next/link";
 
 interface ScheduledTrip {
@@ -18,7 +18,8 @@ interface ScheduledTrip {
 }
 
 export default function UpcomingTrips() {
-    const [trips, setTrips] = useState<ScheduledTrip[]>([]);
+
+    const [Trips, setTrips] = useState<ScheduledTrip[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -26,7 +27,9 @@ export default function UpcomingTrips() {
     }, []);
 
     const fetchUpcomingTrips = async () => {
-        const today = new Date().toISOString().split("T")[0];
+        const today = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000)
+            .toISOString()
+            .split("T")[0];
 
         const { data, error } = await supabase
             .from("scheduled_trips")
@@ -35,7 +38,6 @@ export default function UpcomingTrips() {
             .gte("date", today)
             .order("date", { ascending: true })
             .limit(2);
-
         if (!error) setTrips(data || []);
         setLoading(false);
     };
@@ -62,7 +64,7 @@ export default function UpcomingTrips() {
         );
     }
 
-    if (trips.length === 0) return null;
+    if (Trips.length === 0) return null;
 
     return (
         <section className="max-w-6xl mx-auto px-6 py-20">
@@ -76,8 +78,8 @@ export default function UpcomingTrips() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {trips.map(trip => {
-                    const destination = tripsData.find(t => t.id === trip.destination_id);
+                {Trips.map(trip => {
+                    const destination = TripsData.find(t => t.id === trip.destination_id);
                     const spotsPercent = (trip.spots_remaining / trip.capacity) * 100;
                     const isAlmostFull = spotsPercent <= 30;
 
@@ -108,6 +110,7 @@ export default function UpcomingTrips() {
 
                             {/* Trip Details */}
                             <div className="p-6 space-y-4">
+
 
                                 {/* Date and Time */}
                                 <div className="flex items-center gap-2 text-gray-700">
@@ -157,7 +160,7 @@ export default function UpcomingTrips() {
                                         </span>
                                         <span className="text-gray-500 text-sm ml-1">DZD / person</span>
                                     </div>
-                                    <Link href={`/trips/${trip.destination_id}`}>
+                                    <Link href={`/Trips/${trip.destination_id}`}>
                                         <button className="px-6 py-2.5 bg-[#FF7B29] text-white font-semibold rounded-full hover:bg-orange-600 transition-all hover:scale-105">
                                             Book Now
                                         </button>
@@ -168,6 +171,8 @@ export default function UpcomingTrips() {
                     );
                 })}
             </div>
+
         </section>
     );
 }
+

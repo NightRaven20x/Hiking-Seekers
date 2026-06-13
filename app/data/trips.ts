@@ -15,7 +15,7 @@ interface Trip {
   mapUrl: string;
 }
 
-export const tripsData: Trip[] = [
+export const TripsData: Trip[] = [
   {
     id: 1,
     title: "Tikjda",

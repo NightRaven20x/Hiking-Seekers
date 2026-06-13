@@ -9,6 +9,7 @@ interface BookingModalProps {
   tripTitle: string;
   tripPrice: number;
   tripId: number;
+  scheduledTripId: string;
 }
 
 interface Person {
@@ -18,7 +19,7 @@ interface Person {
   idPhotoPreview: string | null;
 }
 
-export default function BookingModal({ isOpen, onClose, tripTitle, tripPrice, tripId }: BookingModalProps) {
+export default function BookingModal({ isOpen, onClose, tripTitle, tripPrice, tripId, scheduledTripId }: BookingModalProps) {
   const [seats, setSeats] = useState(1);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [persons, setPersons] = useState<Person[]>([{ name: "", phone: "", idPhoto: null, idPhotoPreview: null }]);
@@ -150,6 +151,7 @@ export default function BookingModal({ isOpen, onClose, tripTitle, tripPrice, tr
           tripTitle,
           seats,
           persons: personsPayload,
+          scheduledTripId,
         }),
       });
 

@@ -4,7 +4,7 @@ import { supabaseServer } from '../../lib/supabase-server';
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { tripId, tripTitle, seats, persons } = body;
+        const { tripId, tripTitle, seats, persons, scheduledTripId } = body;
 
         // Generate booking ref
         const bookingRef = "HS-" + String(Date.now()).slice(-6);
@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
                 trip_title: tripTitle,
                 seats,
                 payment_method: "cash",
-                status: "pending"
+                status: "pending",
+                scheduled_trip_id: scheduledTripId
             })
             .select()
             .single();

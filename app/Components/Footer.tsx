@@ -49,7 +49,7 @@ export default function Footer() {
                 Home
               </Link>
               
-              <Link href="/trips" className="text-white text-sm inline-block w-fit transition-all duration-300 hover:scale-105 hover:[text-shadow:0_0_8px_rgba(255,255,255,0.8)]">Upcoming Trips</Link>
+              <Link href="/Trips" className="text-white text-sm inline-block w-fit transition-all duration-300 hover:scale-105 hover:[text-shadow:0_0_8px_rgba(255,255,255,0.8)]">Destinations</Link>
               <Link href="/about" className="text-white text-sm inline-block w-fit transition-all duration-300 hover:scale-105 hover:[text-shadow:0_0_8px_rgba(255,255,255,0.8)]">About Us</Link>
               <Link href="/gallery" className="text-white text-sm inline-block w-fit transition-all duration-300 hover:scale-105 hover:[text-shadow:0_0_8px_rgba(255,255,255,0.8)]">Gallery</Link>
             </div>
